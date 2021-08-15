@@ -21,6 +21,7 @@ namespace CP380_B3_BlockBlazor
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    
                 });
     }
 }

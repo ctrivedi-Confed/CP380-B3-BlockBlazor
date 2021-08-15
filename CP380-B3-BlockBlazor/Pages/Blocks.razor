@@ -1,6 +1,9 @@
 ﻿@page "/blocks"
 
 <!-- TODO: Add using and inject statements -->
+@using CP380_B3_BlockBlazor.Data
+@using CP380_B1_BlockList.Models
+@inject BlockService blockService
 
 <h3>Blocks</h3>
 
@@ -20,15 +23,34 @@ else
                         - the nonce
                         - the previous hash
           -->
-
+           
+                @foreach (var bl in blocklist)
+                {
+                
+                <div class="card" style="width: 18rem;">
+                    
+                    <div class="card-body">
+                        
+                        <h5 class="card-title">Hash: @bl.Hash</h5>
+                        <p class="card-text">Nonce: @bl.Nonce <br />  Previous Hash: @bl.PreviousHash</p>
+                        <a href="..." class="btn btn-primary">See More</a>
+                        
+                    </div>
+                </div>
+                
+                }
+         
     </div>
 }
 
 @code {
+    
     IEnumerable<Block> blocklist;
 
     protected override async Task OnInitializedAsync()
     {
         // TODO: fetch blocks from the BlockService
+      
+        blocklist = await blockService.GetBlock();
     }
 }
