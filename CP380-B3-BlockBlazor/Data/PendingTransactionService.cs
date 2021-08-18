@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using CP380_B1_BlockList.Models;
@@ -25,8 +26,9 @@ namespace CP380_B3_BlockBlazor.Data
         //       from the web service
         //
         static HttpClient _httpClient;
-        private IConfiguration _config { get; set; }
+        private readonly IConfiguration _config;
 
+        private readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         public PendingTransactionService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -36,21 +38,27 @@ namespace CP380_B3_BlockBlazor.Data
         public async Task<IEnumerable<Payload>> GetPayloads()
         {
             var responce = await _httpClient.GetAsync(_config["url"]);
-
+            //JsonSerializerOptions options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
             if (responce.IsSuccessStatusCode)
             {
-                JsonSerializerOptions options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
                 return await JsonSerializer.DeserializeAsync<IEnumerable<Payload>>(
-                        await responce.Content.ReadAsStreamAsync(), options
+                        await responce.Content.ReadAsStreamAsync(), JsonSerializerOptions
                     );
             }
 
             return Array.Empty<Payload>();
         }
-        //
-        // TODO: Add an async method that returns an HttpResponseMessage
-        //       and accepts a Payload object.
-        //       This method should POST the Payload to the web API server
-        //
+
+        public async Task<HttpResponseMessage> SubmitPayload(Payload payload)
+        {
+            var content = new StringContent(
+                JsonSerializer.Serialize(payload, JsonSerializerOptions),
+                System.Text.Encoding.UTF8,
+                "application/json"
+                );
+
+            var res = await _httpClient.PostAsync(_config["url"], content);
+            return res;
+        }
     }
 }

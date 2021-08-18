@@ -38,16 +38,7 @@ namespace CP380_B3_BlockBlazor.Data
 
             return Array.Empty<Block>();
         }
-        //
-        // TODO: Add a constructor with IConfiguration and IHttpClientFactory arguments
-        //
-
-        //
-        // TODO: Add an async method that returns an IEnumerable<Block> (list of Blocks)
-        //       from the web service
-        //
         
-
     }
 }
 
