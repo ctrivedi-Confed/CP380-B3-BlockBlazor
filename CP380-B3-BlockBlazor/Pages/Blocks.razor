@@ -1,9 +1,9 @@
 ﻿@page "/blocks"
-
 <!-- TODO: Add using and inject statements -->
 @using CP380_B3_BlockBlazor.Data
 @using CP380_B1_BlockList.Models
 @inject BlockService blockService
+@inject MiningService miningService
 
 <h3>Blocks</h3>
 
@@ -23,34 +23,53 @@ else
                         - the nonce
                         - the previous hash
           -->
-           
-                @foreach (var bl in blocklist)
-                {
-                
-                <div class="card" style="width: 18rem;">
-                    
-                    <div class="card-body">
-                        
-                        <h5 class="card-title">Hash: @bl.Hash</h5>
-                        <p class="card-text">Nonce: @bl.Nonce <br />  Previous Hash: @bl.PreviousHash</p>
-                        <a href="..." class="btn btn-primary">See More</a>
-                        
-                    </div>
+
+        @foreach (var bl in blocklist)
+        {
+
+            <div class="card" style="width: 18rem;">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">Hash: @bl.Hash</h5>
+                    <p class="card-text">Nonce: @bl.Nonce <br />  Previous Hash: @bl.PreviousHash</p>
+                    <a href="..." class="btn btn-primary">See More</a>
+
                 </div>
-                
-                }
-         
+            </div>
+
+        }
+
     </div>
-}
+    <EditForm Model="@block" OnValidSubmit="@HandleValidSubmit">
 
-@code {
-    
-    IEnumerable<Block> blocklist;
+        <button type="submit" class="btn btn-primary">Mine Block</button>
+        </EditForm>
+        }
 
-    protected override async Task OnInitializedAsync()
-    {
-        // TODO: fetch blocks from the BlockService
-      
-        blocklist = await blockService.GetBlock();
-    }
-}
+        @code {
+
+            IEnumerable<Block> blocklist;
+
+            Block block;
+
+            protected override async Task OnInitializedAsync()
+            {
+                // TODO: fetch blocks from the BlockService
+
+                blocklist = await blockService.GetBlock();
+                block = await miningService.MineBlock();
+            }
+
+            private async Task HandleValidSubmit()
+            {
+                // TODO: submit the new payload to the web API using the PendingTransactionService
+                //       - if succcessful, the payloads should be re-loaded
+                //       - if there is an error, then the submitResponse variable should be updated with the error
+
+                var res = await blockService.SubmitNewBlockAsync(block);
+
+                blocklist = await blockService.GetBlock();
+                
+            }
+        }

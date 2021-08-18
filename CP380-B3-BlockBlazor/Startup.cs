@@ -31,6 +31,8 @@ namespace CP380_B3_BlockBlazor
             services.AddHttpClient();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddSingleton<MiningService>();
             services.AddSingleton<BlockService>();
             services.AddSingleton<PendingTransactionService>();
             //
