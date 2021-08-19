@@ -10,6 +10,7 @@ namespace CP380_B3_BlockBlazor.Data
     {
         private readonly BlockService _blockService;
         private readonly PendingTransactionService _pendingTransaction;
+        
         public IEnumerable<Block> tmpBlockList { get; set; }
         public IEnumerable<Payload> tmpPayloadList { get; set; }
 
@@ -25,12 +26,11 @@ namespace CP380_B3_BlockBlazor.Data
             tmpBlockList = await _blockService.GetBlock();
             tmpPayloadList = await _pendingTransaction.GetPayloads();
 
-            var block = new Block(DateTime.Now, tmpBlockList.Select(b => b.PreviousHash).Last(), tmpPayloadList.ToList());
+            var block = new Block(DateTime.Now, tmpBlockList.Select(b => b.Hash).Last(), tmpPayloadList.ToList());
 
             block.Mine(2);
 
-            return block;
-
+           return block;
         }
     }
 }

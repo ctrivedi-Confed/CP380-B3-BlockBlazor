@@ -13,52 +13,55 @@
 }
 else
 {
-    <div class="card-columns">
 
-        <!-- TODO: Add cards for each block in the block list
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
 
-                   Each card should show:
-                        - the position in the chain (starting at 0)
-                        - the hash
-                        - the nonce
-                        - the previous hash
-          -->
+                <!-- TODO: Add cards for each block in the block list
 
-        @foreach (var bl in blocklist)
-        {
+                           Each card should show:
+                                - the position in the chain (starting at 0)
+                                - the hash
+                                - the nonce
+                                - the previous hash
+                -->
 
-            <div class="card" style="width: 18rem;">
+                @foreach (var bl in blocklist)
+                {
+                    <div class="card-body">
 
-                <div class="card-body">
+                        <h5 class="card-title">Hash: @bl.Hash</h5>
+                        <p class="card-text">Nonce: @bl.Nonce <br />  Previous Hash: @bl.PreviousHash</p>
+                        <a href="..." class="btn btn-primary">See More</a>
 
-                    <h5 class="card-title">Hash: @bl.Hash</h5>
-                    <p class="card-text">Nonce: @bl.Nonce <br />  Previous Hash: @bl.PreviousHash</p>
-                    <a href="..." class="btn btn-primary">See More</a>
+                    </div>
 
-                </div>
+
+                }
+
             </div>
-
-        }
-
+        </div>
     </div>
-    <EditForm Model="@block" OnValidSubmit="@HandleValidSubmit">
+            <EditForm Model="@block" OnValidSubmit="@HandleValidSubmit">
 
-        <button type="submit" class="btn btn-primary">Mine Block</button>
-        </EditForm>
-        }
+                <button type="submit" class="btn btn-primary">Mine Block</button>
+            </EditForm>
+            }
 
-        @code {
+            @code {
 
-            IEnumerable<Block> blocklist;
+                IEnumerable<Block> blocklist;
 
-            Block block;
+                Block block;
 
-            protected override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
             {
                 // TODO: fetch blocks from the BlockService
 
                 blocklist = await blockService.GetBlock();
                 block = await miningService.MineBlock();
+
             }
 
             private async Task HandleValidSubmit()
@@ -70,6 +73,6 @@ else
                 var res = await blockService.SubmitNewBlockAsync(block);
 
                 blocklist = await blockService.GetBlock();
-                
+
             }
-        }
+            }
